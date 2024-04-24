@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 30, 2019 at 07:25 PM
--- Server version: 10.1.38-MariaDB
--- PHP Version: 7.3.2
+-- Generation Time: Apr 24, 2024 at 09:07 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -21,6 +20,31 @@ SET time_zone = "+00:00";
 --
 -- Database: `pustaka`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `id_booking` varchar(12) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `tgl_booking` date NOT NULL,
+  `batas_ambil` date NOT NULL,
+  `id_user` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_detail`
+--
+
+CREATE TABLE `booking_detail` (
+  `id` int(11) NOT NULL,
+  `id_booking` varchar(12) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `id_buku` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -40,7 +64,7 @@ CREATE TABLE `buku` (
   `dipinjam` int(11) NOT NULL,
   `dibooking` int(11) NOT NULL,
   `image` varchar(256) DEFAULT 'book-default-cover.jpg'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `buku`
@@ -63,13 +87,25 @@ INSERT INTO `buku` (`id`, `judul_buku`, `id_kategori`, `pengarang`, `penerbit`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `detail_pinjam`
+--
+
+CREATE TABLE `detail_pinjam` (
+  `no_pinjam` varchar(12) NOT NULL,
+  `id_buku` int(11) NOT NULL,
+  `denda` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `kategori`
 --
 
 CREATE TABLE `kategori` (
   `id` int(11) NOT NULL,
   `kategori` varchar(45) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `kategori`
@@ -95,7 +131,7 @@ INSERT INTO `kategori` (`id`, `kategori`) VALUES
 CREATE TABLE `menu` (
   `id` int(11) NOT NULL,
   `menu` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `menu`
@@ -113,13 +149,30 @@ INSERT INTO `menu` (`id`, `menu`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `pinjam`
+--
+
+CREATE TABLE `pinjam` (
+  `no_pinjam` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `tgl_pinjam` date NOT NULL,
+  `id_booking` varchar(12) NOT NULL,
+  `id_user` int(11) NOT NULL,
+  `tgl_kembali` date NOT NULL,
+  `tgl_pengembalian` date NOT NULL,
+  `status` enum('Pinjam','Kembali') NOT NULL DEFAULT 'Pinjam',
+  `total_denda` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `role`
 --
 
 CREATE TABLE `role` (
   `id` int(11) NOT NULL,
   `role` varchar(128) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `role`
@@ -132,35 +185,69 @@ INSERT INTO `role` (`id`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `temp`
+--
+
+CREATE TABLE `temp` (
+  `id` int(11) NOT NULL,
+  `tgl_booking` datetime DEFAULT NULL,
+  `id_user` varchar(12) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `email_user` varchar(128) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `id_buku` int(11) DEFAULT NULL,
+  `judul_buku` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `image` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `penulis` varchar(128) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `penerbit` varchar(128) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `tahun_terbit` year(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `temp`
+--
+
+INSERT INTO `temp` (`id`, `tgl_booking`, `id_user`, `email_user`, `id_buku`, `judul_buku`, `image`, `penulis`, `penerbit`, `tahun_terbit`) VALUES
+(4, '2024-04-23 10:30:44', '17', 'kimvya03@gmail.com', 2, 'Mudah Belajar Komputer untuk Anak', 'img1557402397.jpg', 'Bambang Agus Setiawan', 'Huta Media', 2014);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,
   `nama` varchar(128) NOT NULL,
+  `alamat` text NOT NULL,
   `email` varchar(128) NOT NULL,
   `image` varchar(128) NOT NULL,
   `password` varchar(256) NOT NULL,
   `role_id` int(11) NOT NULL,
   `is_active` int(1) NOT NULL,
   `tanggal_input` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `nama`, `email`, `image`, `password`, `role_id`, `is_active`, `tanggal_input`) VALUES
-(1, 'Imam Nawawi', 'imam.imw@gmail.com', 'pro1557486527.jpg', '$2y$10$jLgqE1IBWTdVFuBfgq4u/upFdTkdRmKSigfZ7M8qHbjkTmnf26D5a', 1, 1, 1554218983),
-(3, 'Maruloh, M.Kom', 'maruloh.mru@bsi.ac.id', 'default.jpg', '$2y$10$beSdsua15A.A.tmiLIsmfuQCLWGdptUwjXlGI2u2kqxlpPXpXqZ72', 1, 1, 1554219788),
-(13, 'Rizkiyah', 'kiki.hidayah@gmail.com', 'pro1557648081.jpg', '$2y$10$237zpGsuPlkDaH0z0kMhKOcP.1pmMx8cxrUXGgh2ErFPQZ5Eb8p72', 1, 1, 1557609676),
-(14, 'Eni Irfiani', 'eni.enf@bsi.ac.id', 'default.jpg', '$2y$10$pVXQd4Hs4yrtWjIjhyngge2tsG5nWbL.B956XbElPOM0Q0EsSip.a', 1, 1, 1563868032),
-(15, 'Andriansah', 'andriansah.aiy@bsi.ac.id', 'default.jpg', '$2y$10$perspnO9EwfN24C1UnIlVuJl9WfZazMq.KynnKNcTdqprkVSfcmiC', 1, 1, 1563868080),
-(16, 'Imam Khotib', 'imamkhotib0@gmail.com', 'default.jpg', '$2y$10$G6Z.Bq1htczywNfgmC0Ti.WTidif/a7ztpgMOyj1r7v6UWJzDSOmW', 1, 1, 1564436443);
+INSERT INTO `user` (`id`, `nama`, `alamat`, `email`, `image`, `password`, `role_id`, `is_active`, `tanggal_input`) VALUES
+(1, 'Imam Nawawi', '', 'imam.imw@gmail.com', 'pro1557486527.jpg', '$2y$10$jLgqE1IBWTdVFuBfgq4u/upFdTkdRmKSigfZ7M8qHbjkTmnf26D5a', 1, 1, 1554218983),
+(3, 'Maruloh, M.Kom', '', 'maruloh.mru@bsi.ac.id', 'default.jpg', '$2y$10$beSdsua15A.A.tmiLIsmfuQCLWGdptUwjXlGI2u2kqxlpPXpXqZ72', 1, 1, 1554219788),
+(13, 'Rizkiyah', '', 'kiki.hidayah@gmail.com', 'pro1557648081.jpg', '$2y$10$237zpGsuPlkDaH0z0kMhKOcP.1pmMx8cxrUXGgh2ErFPQZ5Eb8p72', 1, 1, 1557609676),
+(14, 'Eni Irfiani', '', 'eni.enf@bsi.ac.id', 'default.jpg', '$2y$10$pVXQd4Hs4yrtWjIjhyngge2tsG5nWbL.B956XbElPOM0Q0EsSip.a', 1, 1, 1563868032),
+(15, 'Andriansah', '', 'andriansah.aiy@bsi.ac.id', 'default.jpg', '$2y$10$perspnO9EwfN24C1UnIlVuJl9WfZazMq.KynnKNcTdqprkVSfcmiC', 1, 1, 1563868080),
+(16, 'Imam Khotib', '', 'imamkhotib0@gmail.com', 'default.jpg', '$2y$10$G6Z.Bq1htczywNfgmC0Ti.WTidif/a7ztpgMOyj1r7v6UWJzDSOmW', 1, 1, 1564436443),
+(17, 'Mingyu', 'Annyang', 'kimvya03@gmail.com', 'default.jpg', '$2y$10$eHTUNwrCNU2eMkJ9iqVZ6e6dUzuoZTi2532ZGByuo0T8iV.Zl6MWa', 2, 1, 1712028220);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `buku`
@@ -181,9 +268,21 @@ ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `pinjam`
+--
+ALTER TABLE `pinjam`
+  ADD PRIMARY KEY (`no_pinjam`);
+
+--
 -- Indexes for table `role`
 --
 ALTER TABLE `role`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `temp`
+--
+ALTER TABLE `temp`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -195,6 +294,12 @@ ALTER TABLE `user`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `booking_detail`
+--
+ALTER TABLE `booking_detail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `buku`
@@ -221,10 +326,16 @@ ALTER TABLE `role`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `temp`
+--
+ALTER TABLE `temp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
