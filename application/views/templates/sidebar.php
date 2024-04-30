@@ -11,7 +11,6 @@
 
             <!-- Divider -->
             <hr class="sidebar-divider">
-
            
 
             <!-- Looping Menu-->
@@ -53,8 +52,26 @@
                                 <span>Data Anggota</span></a>
                         </li>
                     </li>
-                <!-- Divider -->
-                <hr class="sidebar-divider mt-3">
+                    <!-- Divider -->
+                    <hr class="sidebar-divider mt-3">
+    
+                    <!--Heading-->
+                    <div class="sidebar-heading">
+                        Transaksi
+                    </div>
+                    <!--Nav Item Dasboard-->
+                    <li class="nav-item">
+                        <a class="nav-link pc-0" href="<?=base_url('pinjam'); ?>">
+                            <i class="fa fa-fw fa-shopping-card"></i>
+                            <span>Data Peminjam</sapn></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link pb-0" href="<? base_url('pinjam/daftarBooking'); ?>">
+                            <i class="fa fa-fw fa-list"></i>
+                            <span>Data Booking</span></a>
+                        </li>
+                    </li>
+                    
 
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
